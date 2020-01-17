@@ -1,0 +1,82 @@
+<div>
+
+  <div class="row justify-content-center">
+    <img id="myImage" src="assests/img/burger.png" style="width:25%;height:25%;"></img>
+  </div>
+
+  <div class="row justify-content-center">
+    <h2>Eat-Da-Burger!</h2>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="col-lg-3">
+      <div class="row justify-content-center">
+        <ul>
+          {{#each burgers}}
+          {{#unless this.devoured}}
+          <li>
+            {{this.id}}
+            {{this.burger_name}}
+            <form action="/{{this.id}}?_method=PUT" method="POST">
+              <input type="hidden" name="devoured" value="true">
+              <button class="btn-primary" type="submit">Devour It!</button>
+            </form>
+          </li>
+          {{/unless}}
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-lg-3">
+      <div class="row justify-content-center">
+        {{#each burgers}}
+        {{#if this.devoured}}
+        <li>
+          {{this.id}}
+          {{this.burger_name}}
+        </li>
+        {{/if}}
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <form class="create-update-form">
+      <div class="form-group">
+        <h5>Enter a burger you want to eat and click the "Submit" button</h5>
+        <input type="text" id="ca" name="burger_name">
+      </div>
+
+      <button class="btn-primary" type="button" onclick="buger_submit(event)">Submit</button>
+    </form>
+  </div>
+
+  <div class="row justify-content-center">
+    <h5>Enter a burger you want to eat Click the "Submit" button</h5>
+  </div>
+
+</div>
+
+<script>
+  const buger_submit = async (event) => {
+    event.preventDefault();
+    console.log(event);
+    const input = document.getElementById("ca").value;
+
+    // Default options are marked with *
+    const response = await fetch('/api/burgers', {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      body: JSON.stringify({
+        burger_name: input,
+        devoured: false,
+
+      }) // body data type must match "Content-Type" header
+    });
+    return await response.json(); // parses JSON response into native JavaScript objects
+
+  }
+</script>
