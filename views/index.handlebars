@@ -1,7 +1,7 @@
 <div>
 
   <div class="row justify-content-center">
-    <img id="myImage" src="assests/img/burger.png" style="width:25%;height:25%;"></img>
+    <img id="myImage" src="assets/img/burger.png" style="width:25%;height:25%;"></img>
   </div>
 
   <div class="row justify-content-center">
@@ -19,9 +19,9 @@
           <li>
             {{this.id}}
             {{this.burger_name}}
-            <form action="/{{this.id}}?_method=PUT" method="POST">
+            <form>
               <input type="hidden" name="devoured" value="true">
-              <button class="btn-primary" type="submit">Devour It!</button>
+              <button class="btn-primary" value={{this.id}} type="submit" onclick="devour_it(event)">Devour It!</button>
             </form>
           </li>
           {{/unless}}
@@ -29,17 +29,18 @@
         </ul>
       </div>
     </div>
-
     <div class="col-lg-3">
       <div class="row justify-content-center">
-        {{#each burgers}}
-        {{#if this.devoured}}
-        <li>
-          {{this.id}}
-          {{this.burger_name}}
-        </li>
-        {{/if}}
-        {{/each}}
+        <ul>
+          {{#each burgers}}
+          {{#if this.devoured}}
+          <li>
+            {{this.id}}
+            {{this.burger_name}}
+          </li>
+          {{/if}}
+          {{/each}}
+        </ul>
       </div>
     </div>
   </div>
@@ -67,16 +68,42 @@
     console.log(event);
     const input = document.getElementById("ca").value;
 
+    const data = {
+      burger_name: input,
+      devoured: false,
+    } // body data type must match "Content-Type" header
+
+    console.log(data);
     // Default options are marked with *
     const response = await fetch('/api/burgers', {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      body: JSON.stringify({
-        burger_name: input,
-        devoured: false,
-
-      }) // body data type must match "Content-Type" header
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
     });
+    await location.reload();
     return await response.json(); // parses JSON response into native JavaScript objects
-
   }
+
+  const devour_it = async (event) => {
+    event.preventDefault();
+    burger_id = event.toElement.value;
+
+    const data = {
+      devoured: true
+    } // body data type must match "Content-Type" header
+
+    const response = await fetch('/api/burgers/' + burger_id, {
+      method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    });
+
+    await location.reload();
+    return await response.json(); // parses JSON response into native JavaScript objects
+  }
+
 </script>
