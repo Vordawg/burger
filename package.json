@@ -23,5 +23,9 @@
     "eslint-config-google": "^0.14.0",
     "jsdoc": "^3.6.3",
     "nodemon": "^1.19.4"
+  },
+  "production": {
+    "use_env_variable": "JAWSDB_URL",
+    "dialect": "mysql"
   }
 }
